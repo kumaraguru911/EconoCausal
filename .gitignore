@@ -1,0 +1,27 @@
+# Python
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+
+# Frontend
+node_modules/
+dist/
+
+# Environment variables
+.env
+.env.*
+
+# Local data and model artifacts
+data/raw/
+data/processed/
+models/
+*.joblib
+*.pkl
+
+# Notebooks
+.ipynb_checkpoints/
+
+# Editors
+.vscode/
+.idea/
