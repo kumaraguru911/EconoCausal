@@ -1,27 +1,18 @@
-# Python
 .venv/
 __pycache__/
 *.py[cod]
 .pytest_cache/
-
-# Frontend
+.ipynb_checkpoints/
 node_modules/
 dist/
-
-# Environment variables
 .env
 .env.*
-
-# Local data and model artifacts
-data/raw/
-data/processed/
-models/
+data/raw/*
+data/processed/*
+!data/raw/.gitkeep
+!data/processed/.gitkeep
 *.joblib
 *.pkl
-
-# Notebooks
-.ipynb_checkpoints/
-
-# Editors
+*.parquet
 .vscode/
 .idea/
