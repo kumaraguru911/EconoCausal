@@ -2,7 +2,7 @@
 import { useMemo, useState } from "react";
 import Plot from "react-plotly.js";
 import "./App.css";
-
+import Papa from "papaparse";
 type Campaign = {
   campaign: string;
   impressions: number;
@@ -19,36 +19,107 @@ const demoCampaigns: Campaign[] = [
   { campaign: "Campaign E", impressions: 11000, visits: 660, conversions: 88, spend: 1950 },
 ];
 
+
 function parseCSV(text: string): Campaign[] {
-  const lines = text.trim().split(/\r?\n/);
-  if (lines.length < 2) throw new Error("CSV must contain a header and at least one data row.");
+  const required = [
+    "campaign",
+    "impressions",
+    "visits",
+    "conversions",
+    "spend",
+  ];
 
-  const headers = lines[0].split(",").map((h) => h.trim().toLowerCase());
-  const required = ["campaign", "impressions", "visits", "conversions", "spend"];
-  const indexes = required.map((name) => headers.indexOf(name));
+  const result = Papa.parse<Record<string, string>>(text, {
+    header: true,
+    skipEmptyLines: "greedy",
+    transformHeader: (header) => header.trim().toLowerCase(),
+  });
 
-  if (indexes.some((i) => i === -1)) {
-    throw new Error(`Required CSV columns: ${required.join(", ")}`);
+  if (result.errors.length > 0) {
+    throw new Error(
+      `CSV parsing failed: ${result.errors[0].message}`,
+    );
   }
 
-  return lines.slice(1).filter(Boolean).map((line, rowIndex) => {
-    const cells = line.split(",").map((cell) => cell.trim());
-    const campaign = cells[indexes[0]];
-    const values = indexes.slice(1).map((i) => Number(cells[i]));
+  const headers = result.meta.fields ?? [];
 
-    if (!campaign || values.some((value) => !Number.isFinite(value) || value < 0)) {
-      throw new Error(`Invalid campaign data on CSV row ${rowIndex + 2}.`);
+  if (new Set(headers).size !== headers.length) {
+    throw new Error("CSV contains duplicate column headers.");
+  }
+
+  const missing = required.filter((name) => !headers.includes(name));
+
+  if (missing.length > 0) {
+    throw new Error(`Missing required columns: ${missing.join(", ")}`);
+  }
+
+  if (result.data.length === 0) {
+    throw new Error("CSV contains no campaign records.");
+  }
+
+  const seenCampaigns = new Set<string>();
+
+  return result.data.map((row, index) => {
+    const rowNumber = index + 2;
+    const campaign = (row.campaign ?? "").trim();
+
+    if (!campaign) {
+      throw new Error(`Campaign name is missing on row ${rowNumber}.`);
     }
 
-    const [impressions, visits, conversions, spend] = values;
+    const campaignKey = campaign.toLowerCase();
 
-    if (visits > impressions || conversions > visits) {
-      throw new Error(`Inconsistent counts on CSV row ${rowIndex + 2}.`);
+    if (seenCampaigns.has(campaignKey)) {
+      throw new Error(`Duplicate campaign "${campaign}" found.`);
+    }
+
+    seenCampaigns.add(campaignKey);
+
+    const parseCount = (column: string): number => {
+      const raw = row[column]?.trim() ?? "";
+
+      if (!/^\d+$/.test(raw)) {
+        throw new Error(
+          `${column} must be a non-negative integer on row ${rowNumber}.`,
+        );
+      }
+
+      const value = Number(raw);
+
+      if (!Number.isSafeInteger(value)) {
+        throw new Error(`${column} is too large on row ${rowNumber}.`);
+      }
+
+      return value;
+    };
+
+    const impressions = parseCount("impressions");
+    const visits = parseCount("visits");
+    const conversions = parseCount("conversions");
+    const spendText = row.spend?.trim() ?? "";
+
+    if (!spendText || !Number.isFinite(Number(spendText))) {
+      throw new Error(`Invalid spend on row ${rowNumber}.`);
+    }
+
+    const spend = Number(spendText);
+
+    if (spend < 0) {
+      throw new Error(`Spend cannot be negative on row ${rowNumber}.`);
+    }
+
+    if (visits > impressions) {
+      throw new Error(`Visits exceed impressions on row ${rowNumber}.`);
+    }
+
+    if (conversions > visits) {
+      throw new Error(`Conversions exceed visits on row ${rowNumber}.`);
     }
 
     return { campaign, impressions, visits, conversions, spend };
   });
 }
+
 
 function App() {
   const [campaigns, setCampaigns] = useState<Campaign[]>(demoCampaigns);
@@ -83,6 +154,46 @@ function App() {
       setError(e instanceof Error ? e.message : "Could not read the CSV.");
     }
   }
+
+
+function downloadCampaignReport() {
+  const headers = [
+    "campaign",
+    "impressions",
+    "visits",
+    "conversions",
+    "spend",
+    "conversion_rate_pct",
+    "cost_per_conversion",
+  ];
+
+  const rows = campaigns.map((c) => [
+    c.campaign,
+    c.impressions,
+    c.visits,
+    c.conversions,
+    c.spend.toFixed(2),
+    c.visits ? ((c.conversions / c.visits) * 100).toFixed(2) : "0.00",
+    c.conversions ? (c.spend / c.conversions).toFixed(2) : "",
+  ]);
+
+  const escapeCell = (value: string | number) =>
+    `"${String(value).replace(/"/g, '""')}"`;
+
+  const csv = [headers, ...rows]
+    .map((row) => row.map(escapeCell).join(","))
+    .join("\n");
+
+  const url = URL.createObjectURL(
+    new Blob([csv], { type: "text/csv;charset=utf-8;" }),
+  );
+
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = "econocausal_campaign_report.csv";
+  link.click();
+  URL.revokeObjectURL(url);
+}
 
   const money = (value: number) =>
     new Intl.NumberFormat("en-IN", {
@@ -156,6 +267,27 @@ function App() {
             <strong>{totals.visits ? `${(totals.conversions / totals.visits * 100).toFixed(2)}%` : "—"}</strong>
             <small>Conversions ÷ visits</small>
           </article>
+
+<article className="metric-card">
+  <span>Total campaign spend</span>
+  <strong>{money(totals.spend)}</strong>
+  <small>Sum of reported campaign spend</small>
+</article>
+
+<article className="metric-card">
+  <span>Cost per conversion</span>
+  <strong>
+    {totals.conversions > 0
+      ? money(totals.spend / totals.conversions)
+      : "—"}
+  </strong>
+  <small>
+    {totals.conversions > 0
+      ? "Spend ÷ conversions"
+      : "No conversions recorded"}
+  </small>
+</article>
+
         </section>
 
         <section className="content-grid">
@@ -261,6 +393,14 @@ function App() {
           </div>
 
           {error && <p className="error-message" role="alert">{error}</p>}
+
+<button
+  type="button"
+  className="export-button"
+  onClick={downloadCampaignReport}
+>
+  Download campaign report
+</button>
 
           <div className="table-wrap">
             <table>

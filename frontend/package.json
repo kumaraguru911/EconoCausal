@@ -10,6 +10,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "papaparse": "^5.7.0",
     "plotly.js": "^4.1.2",
     "react": "^19.2.8",
     "react-dom": "^19.2.8",
@@ -17,6 +18,7 @@
   },
   "devDependencies": {
     "@types/node": "^24.13.3",
+    "@types/papaparse": "^5.5.2",
     "@types/plotly.js": "^3.0.15",
     "@types/react": "^19.2.18",
     "@types/react-dom": "^19.2.7",

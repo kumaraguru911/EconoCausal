@@ -150,3 +150,25 @@ input:focus-visible {
   outline: 3px solid #8491ff;
   outline-offset: 3px;
 }
+
+
+.export-button {
+  border: 0;
+  border-radius: 8px;
+  padding: 10px 14px;
+  background: #5869dc;
+  color: white;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 18px;
+}
+
+.export-button:hover {
+  background: #4656c5;
+}
+
+.export-button:focus-visible {
+  outline: 3px solid #8491ff;
+  outline-offset: 3px;
+}
