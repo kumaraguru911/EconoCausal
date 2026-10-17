@@ -1,0 +1,114 @@
+{
+  "rows_evaluated": 25000,
+  "predicted_effect_mean": 0.0006441020914396357,
+  "predicted_effect_std": 0.004580813483589744,
+  "predicted_effect_min": -0.0446938802916884,
+  "predicted_effect_max": 0.116565771625493,
+  "mean_effect_normal_approximation_interval": [
+    0.0005873187826187821,
+    0.0007008854002604893
+  ],
+  "rank_bins": [
+    {
+      "rank_bin": 1,
+      "rows": 2500,
+      "treated_rows": 2138,
+      "control_rows": 362,
+      "treated_conversion_rate": 0.001403180542563143,
+      "control_conversion_rate": 0.0,
+      "observed_rate_difference": 0.001403180542563143,
+      "mean_predicted_effect": -0.002369681632753808
+    },
+    {
+      "rank_bin": 2,
+      "rows": 2500,
+      "treated_rows": 2092,
+      "control_rows": 408,
+      "treated_conversion_rate": 0.0004780114722753346,
+      "control_conversion_rate": 0.0,
+      "observed_rate_difference": 0.0004780114722753346,
+      "mean_predicted_effect": -0.0011781311371358307
+    },
+    {
+      "rank_bin": 3,
+      "rows": 2500,
+      "treated_rows": 2141,
+      "control_rows": 359,
+      "treated_conversion_rate": 0.00046707146193367583,
+      "control_conversion_rate": 0.0,
+      "observed_rate_difference": 0.00046707146193367583,
+      "mean_predicted_effect": -0.0010749591632351336
+    },
+    {
+      "rank_bin": 4,
+      "rows": 2500,
+      "treated_rows": 2095,
+      "control_rows": 405,
+      "treated_conversion_rate": 0.00047732696897374703,
+      "control_conversion_rate": 0.0,
+      "observed_rate_difference": 0.00047732696897374703,
+      "mean_predicted_effect": -0.0009399903279205059
+    },
+    {
+      "rank_bin": 5,
+      "rows": 2500,
+      "treated_rows": 2092,
+      "control_rows": 408,
+      "treated_conversion_rate": 0.0004780114722753346,
+      "control_conversion_rate": 0.0,
+      "observed_rate_difference": 0.0004780114722753346,
+      "mean_predicted_effect": -0.00063623658598243
+    },
+    {
+      "rank_bin": 6,
+      "rows": 2500,
+      "treated_rows": 2129,
+      "control_rows": 371,
+      "treated_conversion_rate": 0.0,
+      "control_conversion_rate": 0.0,
+      "observed_rate_difference": 0.0,
+      "mean_predicted_effect": -0.00019397283087057418
+    },
+    {
+      "rank_bin": 7,
+      "rows": 2500,
+      "treated_rows": 2139,
+      "control_rows": 361,
+      "treated_conversion_rate": 0.0009350163627863488,
+      "control_conversion_rate": 0.0,
+      "observed_rate_difference": 0.0009350163627863488,
+      "mean_predicted_effect": 0.00043245502328358577
+    },
+    {
+      "rank_bin": 8,
+      "rows": 2500,
+      "treated_rows": 2129,
+      "control_rows": 371,
+      "treated_conversion_rate": 0.0004697040864255519,
+      "control_conversion_rate": 0.0,
+      "observed_rate_difference": 0.0004697040864255519,
+      "mean_predicted_effect": 0.001247339356113849
+    },
+    {
+      "rank_bin": 9,
+      "rows": 2500,
+      "treated_rows": 2120,
+      "control_rows": 380,
+      "treated_conversion_rate": 0.0014150943396226414,
+      "control_conversion_rate": 0.0,
+      "observed_rate_difference": 0.0014150943396226414,
+      "mean_predicted_effect": 0.0024029677174715984
+    },
+    {
+      "rank_bin": 10,
+      "rows": 2500,
+      "treated_rows": 2140,
+      "control_rows": 360,
+      "treated_conversion_rate": 0.025233644859813085,
+      "control_conversion_rate": 0.013888888888888888,
+      "observed_rate_difference": 0.011344755970924197,
+      "mean_predicted_effect": 0.008751230495425606
+    }
+  ],
+  "caveat": "The interval above describes uncertainty in the mean of predicted effects, not a valid causal ATE confidence interval. The rank-bin differences are descriptive unless evaluated with appropriate randomization-aware uncertainty and design checks."
+}

@@ -1,0 +1,26 @@
+{
+  "model_type": "EconML LinearDML",
+  "outcome": "conversion",
+  "treatment": "treatment",
+  "features": [
+    "f0",
+    "f1",
+    "f2",
+    "f3",
+    "f4",
+    "f5",
+    "f6",
+    "f7",
+    "f8",
+    "f9",
+    "f10",
+    "f11"
+  ],
+  "sample_rows": 100000,
+  "train_rows": 75000,
+  "test_rows": 25000,
+  "seed": 42,
+  "trees_per_nuisance_model": 30,
+  "dataset": "data/raw/criteo/criteo-research-uplift-v2.1.csv.gz",
+  "interpretation": "Advertising-treatment effect on conversion; not a personalized discount effect."
+}

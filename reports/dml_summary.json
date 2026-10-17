@@ -1,0 +1,39 @@
+{
+  "dataset": "data/raw/criteo/criteo-research-uplift-v2.1.csv.gz",
+  "outcome": "conversion",
+  "treatment": "treatment",
+  "features": [
+    "f0",
+    "f1",
+    "f2",
+    "f3",
+    "f4",
+    "f5",
+    "f6",
+    "f7",
+    "f8",
+    "f9",
+    "f10",
+    "f11"
+  ],
+  "sample_rows": 100000,
+  "train_rows": 75000,
+  "test_rows": 25000,
+  "seed": 42,
+  "trees_per_nuisance_model": 30,
+  "treatment_rate": 0.84859,
+  "conversion_rate": 0.00293,
+  "estimated_ate": 0.0006441020914396213,
+  "estimated_ate_95pct_interval": [
+    -0.00028817450901266707,
+    0.0015763786918918505
+  ],
+  "effect_std": 0.004580721866403921,
+  "effect_quantiles": {
+    "p10": -0.0012623599954935244,
+    "p50": -0.00042042037131760944,
+    "p90": 0.003209162534971514
+  },
+  "interpretation": "Estimated effect of Criteo advertising treatment on conversion; not a discount effect. Validate model assumptions and uncertainty before using for decisions.",
+  "effects_file": "reports/dml_test_effects.csv"
+}
