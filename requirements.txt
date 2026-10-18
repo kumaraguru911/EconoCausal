@@ -11,3 +11,7 @@ uvicorn[standard]>=0.30
 networkx>=3.2
 dowhy==0.14
 econml==0.17.0
+
+# Excel dataset support
+openpyxl==3.1.5
+et-xmlfile==2.0.0
